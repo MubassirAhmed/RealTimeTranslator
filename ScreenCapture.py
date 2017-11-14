@@ -4,16 +4,13 @@ import numpy as np
 import wx
 from PIL import Image
 
-app = wx.App()
-screen = wx.ScreenDC()
 
 
 def screenshot(region=None):
     global screen
 
-    #assert type(region) is tuple
-
-    #assert len(region) == 4
+    app = wx.App()
+    screen = wx.ScreenDC()
 
     w, h = screen.Size.Get()
 
@@ -35,6 +32,8 @@ def screenshot(region=None):
     # Construct np array from data buffer and reshape it to img
     img_data_str = np.frombuffer(img_data, dtype='uint8')
     img = img_data_str.reshape((h, w, 3))
+
+    #Converts np array image back to PIL image
     img = Image.fromarray(img)
     return img
 
@@ -46,4 +45,4 @@ def main():
 if __name__ == "__main__":
     main()
 
-"""
+""
