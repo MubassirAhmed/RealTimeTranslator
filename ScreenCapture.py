@@ -2,6 +2,7 @@
 
 import numpy as np
 import wx
+from PIL import Image
 
 app = wx.App()
 screen = wx.ScreenDC()
@@ -10,31 +11,39 @@ screen = wx.ScreenDC()
 def screenshot(region=None):
     global screen
 
-    assert type(region) is tuple
+    #assert type(region) is tuple
 
-    assert len(region) == 4
+    #assert len(region) == 4
 
-    # Region is a tuple of (x, y, w, h)
-    x = region[0]
-    y = region[1]
-    w = region[2]
-    h = region[3]
+    w, h = screen.Size.Get()
 
     # Construct a bitmap
     bmp = wx.Bitmap(w, h)
 
     # Fill bitmap delete memory (don't want memory leak)
     mem = wx.MemoryDC(bmp)
-    mem.Blit(0, 0, w, h, screen, x, y)
+    mem.Blit(0, 0, w, h, screen, 0, 0)
     del mem
 
     # Convert bitmap to image
     wxB = bmp.ConvertToImage()
-
+    
+    
     # Get data buffer
     img_data = wxB.GetData()
 
     # Construct np array from data buffer and reshape it to img
     img_data_str = np.frombuffer(img_data, dtype='uint8')
     img = img_data_str.reshape((h, w, 3))
+    img = Image.fromarray(img)
     return img
+
+"""
+def main():
+    screenshot().show()
+
+
+if __name__ == "__main__":
+    main()
+
+"""
